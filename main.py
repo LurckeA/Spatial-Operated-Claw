@@ -185,8 +185,8 @@ def get_is_fist():
         for landmarks in hand_track.multi_hand_landmarks:
             wrist = landmarks.landmark[0]
 
-            fingers = [landmarks.landmark[i] for i in [12, 20]]
-            knuckles = [landmarks.landmark[i] for i in [5, 9, 14, 17]]
+            fingers = [landmarks.landmark[i] for i in [8, 12, 16, 20]]
+            knuckles = [landmarks.landmark[i] for i in [5, 9, 13, 17]]
 
             # Check if each finger landmark is below its corresponding knuckle relative to the wrist
             fist_detected = all(
