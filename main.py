@@ -188,11 +188,13 @@ def get_is_fist():
             fingers = [landmarks.landmark[i] for i in [8, 12, 16, 20]]
             knuckles = [landmarks.landmark[i] for i in [5, 9, 13, 17]]
 
-            # Check if each finger landmark is below its corresponding knuckle relative to the wrist
-            fist_detected = all(
-                finger.y > knuckle.y if wrist.y > knuckle.y else finger.y < knuckle.y
-                for finger, knuckle in zip(fingers, knuckles)
-            )
+            # Calculate the distance between each finger landmark and its corresponding knuckle
+            distances = [
+                finger.y - knuckle.y for finger, knuckle in zip(fingers, knuckles)
+            ]
+
+            # Check if all fingers are lower than their corresponding knuckles
+            fist_detected = all(distance > 0 for distance in distances)
 
             return fist_detected
 
@@ -230,7 +232,12 @@ def move_servos():
         axle2_pin.write(elevation_eased * 180)
 
         # claw
-        claw_pin.write(0 if is_fist else 180)
+        if hand_track.multi_hand_landmarks:
+            # Normalize the average distance to a 
+            avg_distance = sum(distances) / len(distances)
+            claw_value = max(5, min(120, 5 + avg_distance * (120 - 5)))
+
+            claw_pin.write(claw_value)
 
 
 servo_thread = threading.Thread(target=move_servos)
