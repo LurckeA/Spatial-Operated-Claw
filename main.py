@@ -37,6 +37,7 @@ clock = pygame.time.Clock()
 font = pygame.font.SysFont("Consolas", 16)
 
 hands = mp_hands.Hands(max_num_hands=1)
+finger_knuckle_distances = []
 
 avg_x_pixel, avg_y_pixel = 0, 0
 avg_x_pixel_eased, avg_y_pixel_eased = 0, 0
@@ -181,6 +182,7 @@ def draw_elements():
 
 
 def get_is_fist():
+    global finger_knuckle_distances
     if hand_track.multi_hand_landmarks:
         for landmarks in hand_track.multi_hand_landmarks:
             wrist = landmarks.landmark[0]
@@ -189,12 +191,12 @@ def get_is_fist():
             knuckles = [landmarks.landmark[i] for i in [5, 9, 13, 17]]
 
             # Calculate the distance between each finger landmark and its corresponding knuckle
-            distances = [
+            finger_knuckle_distances = [
                 finger.y - knuckle.y for finger, knuckle in zip(fingers, knuckles)
             ]
 
             # Check if all fingers are lower than their corresponding knuckles
-            fist_detected = all(distance > 0 for distance in distances)
+            fist_detected = all(distance > 0 for distance in finger_knuckle_distances)
 
             return fist_detected
 
@@ -234,7 +236,7 @@ def move_servos():
         # claw
         if hand_track.multi_hand_landmarks:
             # Normalize the average distance to a 
-            avg_distance = sum(distances) / len(distances)
+            avg_distance = sum(finger_knuckle_distances) / len(finger_knuckle_distances)
             claw_value = max(5, min(120, 5 + avg_distance * (120 - 5)))
 
             claw_pin.write(claw_value)
