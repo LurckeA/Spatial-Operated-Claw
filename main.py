@@ -47,7 +47,7 @@ SERVO_PINS = {
     'axle2': "d:6:s",
     'claw': "d:3:s",
 }
-CLAW_ANGLES = {'open': 90, 'closed': 5}
+CLAW_ANGLES = {'open': 90, 'closed': 3}
 HAND_CONFIDENCE = 0.6
 TRACKING_CONFIDENCE = 0.5
 EASING_FACTOR_POS = 0.1
