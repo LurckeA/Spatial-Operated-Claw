@@ -1,5 +1,5 @@
 # Spatial Operated Claw
-a.k.a Tangan Merah (Red hands)
+a.k.a Tangan Merah (Red hand)
 
 Written by [@1rens1](https://github.com/1rens1).
 
